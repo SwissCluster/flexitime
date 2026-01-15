@@ -18,7 +18,7 @@
   "modified": "2025-01-01 00:00:00.000000",
   "module": "Flexitime",
   "name": "Employee Presence Settings - Refresh Balance",
-  "script": "frappe.ui.form.on('Employee Presence Settings', {\n\trefresh: function(frm) {\n\t\t// Refresh flexitime balance from Employee doctype\n\t\tif (frm.doc.employee) {\n\t\t\tfrappe.db.get_value('Employee', frm.doc.employee, 'custom_flexitime_balance', (r) => {\n\t\t\t\tif (r && r.custom_flexitime_balance !== undefined) {\n\t\t\t\t\tfrm.set_value('flexitime_balance', r.custom_flexitime_balance || 0);\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t\t\n\t\t// Make employee field read-only if document is saved (due to unique constraint)\n\t\tif (!frm.is_new()) {\n\t\t\tfrm.set_df_property('employee', 'read_only', 1);\n\t\t}\n\t}\n});",
+  "script": "frappe.ui.form.on('Employee Presence Settings', {\n\trefresh: function(frm) {\n\t\t// Note: Flexitime balance refresh removed - custom_flexitime_balance field no longer exists on Employee\n\t\t// Balance is now tracked directly on Weekly Entry documents via running_balance field\n\t\t// if (frm.doc.employee) {\n\t\t// \tfrappe.db.get_value('Employee', frm.doc.employee, 'custom_flexitime_balance', (r) => {\n\t\t// \t\tif (r && r.custom_flexitime_balance !== undefined) {\n\t\t// \t\t\tfrm.set_value('flexitime_balance', r.custom_flexitime_balance || 0);\n\t\t// \t\t}\n\t\t// \t});\n\t\t// }\n\t\t\n\t\t// Make employee field read-only if document is saved (due to unique constraint)\n\t\tif (!frm.is_new()) {\n\t\t\tfrm.set_df_property('employee', 'read_only', 1);\n\t\t}\n\t}\n});",
   "view": "Form"
  }
 ]
