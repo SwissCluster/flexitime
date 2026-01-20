@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate, add_days, today
+from frappe.utils import getdate, add_days, today, flt
 
 
 class EmployeeWorkPattern(Document):
@@ -49,7 +49,7 @@ class EmployeeWorkPattern(Document):
 	def calculate_flexitime_limit(self):
 		"""Auto-calculate flexitime limit based on FTE (20 hours at 100%)"""
 		if not self.flexitime_limit_hours:
-			self.flexitime_limit_hours = 20 * (self.fte_percentage / 100)
+			self.flexitime_limit_hours = 20 * (flt(self.fte_percentage) / 100)
 
 	def validate_hours(self):
 		"""Ensure hours are non-negative"""
@@ -109,7 +109,7 @@ class EmployeeWorkPattern(Document):
 		base_weekly_hours = get_base_weekly_hours(company)
 		
 		# Calculate expected FTE weekly hours
-		fte_percentage = self.fte_percentage or 100
+		fte_percentage = flt(self.fte_percentage) or 100
 		expected_fte_weekly = base_weekly_hours * (fte_percentage / 100)
 		
 		# Compare with actual weekly hours from pattern

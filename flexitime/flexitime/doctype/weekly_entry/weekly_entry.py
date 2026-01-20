@@ -269,18 +269,13 @@ class WeeklyEntry(Document):
 		recalculate_future_balances(self.employee, self.week_start)
 
 	def update_employee_balance(self):
-		"""Update the custom flexitime balance on Employee"""
-		# Get the latest submitted entry for this employee
-		latest = frappe.db.sql("""
-			SELECT running_balance FROM `tabWeekly Entry`
-			WHERE employee = %s AND docstatus = 1
-			ORDER BY week_start DESC
-			LIMIT 1
-		""", (self.employee,), as_dict=True)
+		"""Update employee balance tracking.
 
-		if latest:
-			frappe.db.set_value("Employee", self.employee,
-				"custom_flexitime_balance", latest[0].running_balance)
+		Note: The custom_flexitime_balance field on Employee was removed.
+		Balance is now tracked directly on Weekly Entry documents via running_balance.
+		This method is kept for future use if balance syncing is needed.
+		"""
+		pass
 
 
 def get_previous_weekly_entry(employee, week_start):
@@ -369,17 +364,7 @@ def recalculate_future_balances(employee, from_week_start):
 		doc.db_set("previous_balance", doc.previous_balance)
 		doc.db_set("running_balance", doc.running_balance)
 
-	# Update employee's current balance
-	latest = frappe.db.sql("""
-		SELECT running_balance FROM `tabWeekly Entry`
-		WHERE employee = %s AND docstatus = 1
-		ORDER BY week_start DESC
-		LIMIT 1
-	""", (employee,), as_dict=True)
-
-	if latest:
-		frappe.db.set_value("Employee", employee,
-			"custom_flexitime_balance", latest[0].running_balance)
+	# Note: Employee balance syncing removed - balance tracked on Weekly Entry only
 
 
 def calculate_expected_hours(employee, date, has_approved_leave=False, is_half_day=False):
