@@ -56,6 +56,7 @@ def _patch_leave_allocation():
         # Store original method
         original_set_total_leaves_allocated = LeaveAllocation.set_total_leaves_allocated
 
+        @frappe.whitelist()
         def patched_set_total_leaves_allocated(self):
             """Patched version that allows 0 leaves when leave type permits."""
             # Check if we should allow zero allocation
